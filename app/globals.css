@@ -1,6 +1,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --spacing: 1rem;
+  --radius: 24px;
+  --inner-radius: calc(var(--radius) - var(--spacing) / 2);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -30,22 +30,11 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--spacing);
   grid-row-start: 2;
-}
-
-.main ol {
-  font-family: var(--font-geist-mono);
-  padding-left: 0;
-  margin: 0;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  list-style-position: inside;
-}
-
-.main li:not(:last-of-type) {
-  margin-bottom: 8px;
+  background-color: #1a1a1a;
+  padding: calc(var(--spacing) * 2);
+  border-radius: var(--radius);
 }
 
 .main code {
@@ -56,29 +45,20 @@
   font-weight: 600;
 }
 
-.ctas {
-  display: flex;
-  gap: 16px;
+.main h1 {
+  margin-block: var(--spacing);
 }
 
-.ctas a {
-  appearance: none;
-  border-radius: 128px;
-  height: 48px;
-  padding: 0 20px;
-  border: none;
-  border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: 500;
+.gameUrl {
+  margin: calc(var(--spacing) * 0.5) calc(var(--spacing) * -1);
+  padding: var(--spacing);
+  background-color: var(--background);
+  border-radius: var(--inner-radius);
+}
+
+.gameUrlCaption {
+  opacity: 0.8;
+  font-size: 0.8em;
 }
 
 a.primary {
@@ -92,22 +72,6 @@ a.secondary {
   min-width: 158px;
 }
 
-.footer {
-  grid-row-start: 3;
-  display: flex;
-  gap: 24px;
-}
-
-.footer a {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer img {
-  flex-shrink: 0;
-}
-
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
@@ -118,11 +82,6 @@ a.secondary {
   a.secondary:hover {
     background: var(--button-secondary-hover);
     border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
   }
 }
 
@@ -136,28 +95,8 @@ a.secondary {
     align-items: center;
   }
 
-  .main ol {
-    text-align: center;
-  }
-
-  .ctas {
-    flex-direction: column;
-  }
-
-  .ctas a {
-    font-size: 14px;
-    height: 40px;
-    padding: 0 16px;
-  }
-
   a.secondary {
     min-width: auto;
-  }
-
-  .footer {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
   }
 }
 
