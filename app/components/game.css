@@ -1,19 +1,22 @@
 .game_pitch {
-    --pitch-cell-size: 48px;
+    --pitch-cell-size: 64px;
 
     display: flex;
-    gap: var(--spacing);
+    gap: calc(var(--spacing) / 2);
+
+    background-color: white;
+    padding: 0 var(--spacing) var(--spacing) var(--spacing);
+    border-radius: 0 0 var(--radius) var(--radius);
 
     .game_pitch_col {
-        --pitch-cell-background: red;
+        --pitch-cell-background: var(--background);
 
         &:hover {
-            --pitch-cell-background: blue;
+            --pitch-cell-background: grey;
         }
 
         display: flex;
         flex-direction: column;
-        gap: calc(var(--spacing) / 2);
 
         .game_pitch_cell {
             min-height: var(--pitch-cell-size);
@@ -24,16 +27,28 @@
             width: var(--pitch-cell-size);
             max-width: var(--pitch-cell-size);
     
-            border-radius: 8px;
-    
             background: var(--pitch-cell-background);
 
-            &.game_pitch_cell_own {
-                background: green !important;
+            padding: calc(var(--spacing) / 2);
+
+            &:last-child {
+                border-radius: 0 0 calc(var(--radius) - var(--spacing) / 2) calc(var(--radius) - var(--spacing) / 2);
             }
 
-            &.game_pitch_cell_other {
-                background: yellow !important;
+            .game_pitch_cell_own,
+            .game_pitch_cell_other {
+                height: 100%;
+                width: 100%;
+
+                border-radius: 50%;
+            }
+
+            .game_pitch_cell_own {
+                background: rgb(196, 45, 22) !important;
+            }
+
+            .game_pitch_cell_other {
+                background: rgb(219, 212, 17) !important;
             }
         }
     }
