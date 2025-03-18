@@ -2,13 +2,17 @@
 
 import Image from "next/image";
 import styles from "./page.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Game from "./components/game";
+import { PitchCellValue } from "./types";
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [gameUrl, setGameUrl] = useState<string>("");
   const [connectionStatus, setConnectionStatus] = useState<'waiting' | 'connected'>('waiting');
+  const [turn, setTurn] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+  const [pitch, setPitch] = useState<PitchCellValue[][]>([]);
 
   useEffect(() => {
     // Check if the client is trying to connect to an existing game
@@ -19,6 +23,7 @@ export default function Home() {
     let ws_conn_url = `ws://${window.location.hostname}:3001/api/ws`;
     if (urlGameId) ws_conn_url += `?gameId=${encodeURIComponent(urlGameId)}`;
     const ws = new WebSocket(ws_conn_url);
+    wsRef.current = ws;
     
     ws.onopen = () => {
       console.log('WebSocket connected');
@@ -29,15 +34,22 @@ export default function Home() {
       console.log('WebSocket message:', data);
 
       if (data.type === 'game_id') {
-        setGameUrl(`http://localhost:${window.location.port || '3000'}/?gameId=${encodeURIComponent(data.value)}`);
+        setGameUrl(`http://${window.location.hostname}:${window.location.port || '3000'}/?gameId=${encodeURIComponent(data.value)}`);
       }
       
       if (data.type === 'game_start') {
         setConnectionStatus('connected');
+        setTurn(data.turn);
+        setPitch(data.pitch);
       }
       
       if (data.type === 'game_stop') {
         setConnectionStatus('waiting');
+      }
+
+      if (data.type === 'move_made') {
+        setTurn(data.turn);
+        setPitch(data.pitch);
       }
     };
 
@@ -95,11 +107,24 @@ export default function Home() {
       </div>
     </div>
   </>
+
+  const onColClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!wsRef.current || connectionStatus !== 'connected' || !turn) return;
+    
+    const colIndex = parseInt(event.currentTarget.getAttribute('data-col') || '0');
+    wsRef.current.send(JSON.stringify({
+      type: 'move',
+      col: colIndex
+    }));
+  };
   
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        { connectionStatus === "waiting" ? waitingElement : <Game /> }
+        { connectionStatus === "waiting"
+          ? waitingElement
+          : <Game pitch={ pitch } turn={ turn } onColClick={ onColClick } />
+        }
       </main>
     </div>
   );

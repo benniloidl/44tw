@@ -4,7 +4,7 @@
     display: flex;
     gap: var(--spacing);
 
-    .game_pitch_row {
+    .game_pitch_col {
         --pitch-cell-background: red;
 
         &:hover {
@@ -27,6 +27,14 @@
             border-radius: 8px;
     
             background: var(--pitch-cell-background);
+
+            &.game_pitch_cell_own {
+                background: green !important;
+            }
+
+            &.game_pitch_cell_other {
+                background: yellow !important;
+            }
         }
     }
 }
