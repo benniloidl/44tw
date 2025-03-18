@@ -1,6 +1,10 @@
-.game_pitch {
-    --pitch-cell-size: 64px;
+.game_stats {
+    display: flex;
+    gap: var(--spacing);
+    align-items: center;
+}
 
+.game_pitch {
     display: flex;
     gap: calc(var(--spacing) / 2);
 
@@ -13,20 +17,16 @@
 
         &:hover {
             --pitch-cell-background: grey;
+
+            .game_pitch_cell_none_last {
+                border: 4px dotted rgb(196, 45, 22);
+            }
         }
 
         display: flex;
         flex-direction: column;
 
         .game_pitch_cell {
-            min-height: var(--pitch-cell-size);
-            height: var(--pitch-cell-size);
-            max-height: var(--pitch-cell-size);
-    
-            min-width: var(--pitch-cell-size);
-            width: var(--pitch-cell-size);
-            max-width: var(--pitch-cell-size);
-    
             background: var(--pitch-cell-background);
 
             padding: calc(var(--spacing) / 2);
@@ -34,22 +34,30 @@
             &:last-child {
                 border-radius: 0 0 calc(var(--radius) - var(--spacing) / 2) calc(var(--radius) - var(--spacing) / 2);
             }
-
-            .game_pitch_cell_own,
-            .game_pitch_cell_other {
-                height: 100%;
-                width: 100%;
-
-                border-radius: 50%;
-            }
-
-            .game_pitch_cell_own {
-                background: rgb(196, 45, 22) !important;
-            }
-
-            .game_pitch_cell_other {
-                background: rgb(219, 212, 17) !important;
-            }
         }
     }
+}
+
+.game_pitch_cell_own,
+.game_pitch_cell_other,
+.game_pitch_cell_none {
+    --stats-cell-size: 48px;
+
+    min-height: var(--stats-cell-size);
+    height: var(--stats-cell-size);
+    max-height: var(--stats-cell-size);
+
+    min-width: var(--stats-cell-size);
+    width: var(--stats-cell-size);
+    max-width: var(--stats-cell-size);
+
+    border-radius: 50%;
+}
+
+.game_pitch_cell_own {
+    background: rgb(196, 45, 22) !important;
+}
+
+.game_pitch_cell_other {
+    background: rgb(219, 212, 17) !important;
 }
