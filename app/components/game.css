@@ -1,0 +1,32 @@
+.game_pitch {
+    --pitch-cell-size: 48px;
+
+    display: flex;
+    gap: var(--spacing);
+
+    .game_pitch_row {
+        --pitch-cell-background: red;
+
+        &:hover {
+            --pitch-cell-background: blue;
+        }
+
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--spacing) / 2);
+
+        .game_pitch_cell {
+            min-height: var(--pitch-cell-size);
+            height: var(--pitch-cell-size);
+            max-height: var(--pitch-cell-size);
+    
+            min-width: var(--pitch-cell-size);
+            width: var(--pitch-cell-size);
+            max-width: var(--pitch-cell-size);
+    
+            border-radius: 8px;
+    
+            background: var(--pitch-cell-background);
+        }
+    }
+}
