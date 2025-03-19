@@ -3,6 +3,7 @@
 import "./game.css";
 import { useEffect, useRef, useState } from "react";
 import { PitchCellValue } from "../types";
+import { toast } from "react-toastify";
 
 export default function Game({ gameId }: { gameId: string }) {
     const [gameUrl, setGameUrl] = useState("");
@@ -36,12 +37,21 @@ export default function Game({ gameId }: { gameId: string }) {
             }
 
             if (data.type === 'game_stop') {
-                setConnectionStatus('waiting');
+                // setConnectionStatus('waiting');
+                window.location.href = "/";
             }
 
             if (data.type === 'move_made') {
                 setTurn(data.turn);
                 setPitch(data.pitch);
+            }
+
+            if (data.type === 'message') {
+                toast(data.message);
+            }
+
+            if (data.type === 'error') {
+                toast("Error: " + data.message);
             }
         };
 

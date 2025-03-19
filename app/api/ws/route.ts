@@ -38,20 +38,22 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
       .length;
     
     if (playersInGame >= 2) {
-      // Reset gameId to force generating a new game
-      gameId = null;
+      ws.send(JSON.stringify({ type: 'error', message: 'The game is full.' }));
+      ws.close();
+      return;
     }
   }
 
+  // Check if game id is present
   if (!gameId) {
     ws.send(JSON.stringify({ type: 'error', message: 'Game ID is required to join a game.' }));
     ws.close();
     return;
   }
 
-  clients.add(ws);
-  clientGameMap.set(ws, gameId);
-  games.add(gameId);
+  clients.add(ws); // Add ws to the list of connected clients
+  games.add(gameId); // Add game id to the list of games
+  clientGameMap.set(ws, gameId); // Map ws to the game id
   
   // Notify all other clients in the same game that a new player has connected
   clients.forEach((client) => {
@@ -90,6 +92,16 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
           type: 'game_start',
           turn: client === gameTurns.get(gameId),
           pitch: formatPitch(pitch, client)
+        }));
+
+        client.send(JSON.stringify({
+          type: 'message',
+          message: "The game has started."
+        }));
+
+        if (client === gameTurns.get(gameId)) client.send(JSON.stringify({
+          type: 'message',
+          message: "It's your turn."
         }));
       }
     }
@@ -162,6 +174,10 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
             turn: true,
             pitch: formatPitch(pitch, otherPlayer)
           }));
+          otherPlayer.send(JSON.stringify({
+            type: 'message',
+            message: "It's your turn."
+          }));
         }
       }
     } catch (error) {
@@ -170,23 +186,27 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
   });
 
   ws.addEventListener('close', () => {
+    clients.delete(ws); // Delete ws from the list of connected clients
+
     const gameId = clientGameMap.get(ws);
-    if (gameId) {
+    clientGameMap.delete(ws); // Delete ws to game id mapping
+    if (!gameId) return;
+
+    const remainingClientsInGame = Array.from(clientGameMap.entries())
+      .filter(([client, id]) => id === gameId && client.readyState === WebSocket.OPEN)
+      .map(([client]) => client);
+
+    if (remainingClientsInGame.length === 0) {
+      games.delete(gameId); // Delete game id from games list if no clients remain
+    } else {
       // Notify other client in same game that game is stopping
       clients.forEach(client => {
         if (client !== ws && client.readyState === WebSocket.OPEN && clientGameMap.get(client) === gameId) {
+          client.send(JSON.stringify({ type: 'message', message: "Your opponent has disconnected." }));
           client.send(JSON.stringify({ type: 'game_stop' }));
         }
       });
-
-      clientGameMap.delete(ws);
-      // Remove game from games set if no more clients are in it
-      const remainingClientsInGame = Array.from(clientGameMap.values()).filter(id => id === gameId);
-      if (remainingClientsInGame.length === 0) {
-        games.delete(gameId);
-      }
     }
-    clients.delete(ws);
   });
 });
 
