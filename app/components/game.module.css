@@ -12,15 +12,26 @@
     align-items: center;
 }
 
+.pitchSection {
+    padding: 0 !important;
+    background: transparent !important;
+}
+
 .pitch {
+    width: fit-content;
+    margin: 0 auto;
+
     display: flex;
+    justify-content: center;
     gap: calc(var(--spacing) / 2);
 
     background-color: white;
-    padding: 0 var(--spacing) var(--spacing) var(--spacing);
-    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 0 var(--spacing);
+    border-radius: var(--radius);
 
     .col {
+        padding-block: var(--spacing);
+
         --pitch-cell-background: var(--background);
 
         &:hover {
@@ -33,15 +44,16 @@
 
         display: flex;
         flex-direction: column;
+        gap: calc(var(--spacing) / 2);
+
+        cursor: pointer;
 
         .cell {
             background: var(--pitch-cell-background);
 
             padding: calc(var(--spacing) / 2);
 
-            &:last-child {
-                border-radius: 0 0 calc(var(--radius) - var(--spacing) / 2) calc(var(--radius) - var(--spacing) / 2);
-            }
+            border-radius: calc(var(--radius) - var(--spacing) / 2);
         }
     }
 }

@@ -118,7 +118,7 @@ export default function Game({ gameId }: { gameId: string }) {
             <h2>{turn ? "Place a piece" : "Wait for opponent"}</h2>
         </section>
 
-        <section>
+        <section className={styles.pitchSection}>
             <div className={styles.pitch}>
                 {Array.from({ length: colCount }, (_, colIndex) => (
                     <div className={styles.col} data-col={colIndex} onClick={onColClick} key={colIndex}>
