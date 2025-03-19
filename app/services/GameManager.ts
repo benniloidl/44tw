@@ -53,24 +53,32 @@ export class GameManager {
     const gameId = this.clientGameMap.get(ws);
     if (!gameId) return false;
 
+    // Cancel if there is no game or if it isn't the turn of ws
     const gameState = this.gameStates.get(gameId);
     if (!gameState || gameState.currentTurn !== ws) return false;
 
+    // Cancel if the column is already full
     const { pitch } = gameState;
     if (pitch[0][columnIndex] !== null) return false;
 
+    // Determine rowIndex (how far the piece falls down in the column)
     let rowIndex = ROW_COUNT - 1;
     while (rowIndex >= 0 && pitch[rowIndex][columnIndex] !== null) {
       rowIndex--;
     }
 
+    // Cancel if rowIndex is invalid
     if (rowIndex === -1) return false;
 
+    // Check for a combination and set gameState.over if the game is over
     if (this.checkCombination(pitch, rowIndex, columnIndex, ws)) {
       gameState.over = true;
     }
 
+    // Make the move
     pitch[rowIndex][columnIndex] = ws;
+
+    // Make sure the next turn goes to the other player
     const otherPlayer = this.getOtherPlayer(gameId, ws);
     if (otherPlayer) {
       gameState.currentTurn = otherPlayer;
