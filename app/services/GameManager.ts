@@ -30,7 +30,7 @@ export class GameManager {
       const pitch = Array.from({ length: ROW_COUNT }, () => Array(COL_COUNT).fill(null));
       const players = this.getPlayersInGame(gameId);
       const firstPlayer = players[Math.floor(Math.random() * players.length)];
-      
+
       this.gameStates.set(gameId, {
         pitch,
         currentTurn: firstPlayer
@@ -39,7 +39,7 @@ export class GameManager {
   }
 
   public formatPitch(pitch: (WebSocket | null)[][], ws: WebSocket): PitchCellValue[][] {
-    return pitch.map(row => 
+    return pitch.map(row =>
       row.map(cell => {
         if (cell === ws) return PitchCellValue.OWN;
         if (cell !== null) return PitchCellValue.OTHER;
@@ -65,6 +65,11 @@ export class GameManager {
 
     if (rowIndex === -1) return false;
 
+    if (this.checkCombination(pitch, rowIndex, columnIndex, ws)) {
+      this.endGame(gameId, ws);
+      return true;
+    }
+
     pitch[rowIndex][columnIndex] = ws;
     const otherPlayer = this.getOtherPlayer(gameId, ws);
     if (otherPlayer) {
@@ -72,6 +77,38 @@ export class GameManager {
     }
 
     return true;
+  }
+
+  private checkCombination(pitch: (WebSocket | null)[][], row: number, col: number, player: WebSocket): boolean {
+    const directions = [
+      [1, 0],
+      [0, 1],
+      [1, 1],
+      [1, -1]
+    ];
+
+    for (const [dx, dy] of directions) {
+      let count = 1;
+      for (let i = 1; i < 4; i++) {
+        const newRow = row + dy * i;
+        const newCol = col + dx * i;
+        if (newRow < 0 || newRow >= ROW_COUNT || newCol < 0 || newCol >= COL_COUNT) break;
+        if (pitch[newRow][newCol] !== player) break;
+        count++;
+      }
+
+      for (let i = 1; i < 4; i++) {
+        const newRow = row - dy * i;
+        const newCol = col - dx * i;
+        if (newRow < 0 || newRow >= ROW_COUNT || newCol < 0 || newCol >= COL_COUNT) break;
+        if (pitch[newRow][newCol] !== player) break;
+        count++;
+      }
+
+      if (count >= 4) return true;
+    }
+
+    return false;
   }
 
   public removeClient(ws: WebSocket): void {
@@ -99,5 +136,13 @@ export class GameManager {
 
   public getGameState(gameId: string): GameState | undefined {
     return this.gameStates.get(gameId);
+  }
+
+  public endGame(gameId: string, winner: WebSocket): void {
+    // Notify all players in the game about the winner
+    const players = this.getPlayersInGame(gameId);
+    players.forEach(player => {
+      player.send(JSON.stringify({ type: 'game_over', winner: winner === player }));
+    });
   }
 } 

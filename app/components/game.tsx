@@ -48,6 +48,11 @@ export default function Game({ gameId }: { gameId: string }) {
                 setPitch(data.pitch);
             }
 
+            if (data.type === 'game_over') {
+                toast((data.winner ? "You" : "Your opponent") + " won the game.");
+                ws.close();
+            }
+
             if (data.type === 'message') {
                 toast(data.message);
             }
