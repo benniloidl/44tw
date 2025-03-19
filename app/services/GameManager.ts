@@ -143,7 +143,7 @@ export class GameManager {
     // Notify all players in the game about the winner
     const players = this.getPlayersInGame(gameId);
     players.forEach(player => {
-      player.send(JSON.stringify({ type: 'GAME_OVER', winner: winner === player ? 'YOU' : 'OPPONENT' }));
+      player.send(JSON.stringify({ type: 'game_over', winner: winner === player }));
     });
   }
 } 
