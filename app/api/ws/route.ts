@@ -78,8 +78,11 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
         } else {
           ws.send(JSON.stringify({ type: 'error', message: 'Invalid move' }));
         }
+      } else if (data.type === 'GAME_OVER') {
+        //todo
       }
     } catch (error) {
+      console.log(error)
       ws.send(JSON.stringify({ type: 'error', message: 'Invalid move data' }));
     }
   });
