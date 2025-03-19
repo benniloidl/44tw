@@ -1,3 +1,7 @@
+.game_url {
+    margin-top: var(--spacing);
+}
+
 .game_stats {
     display: flex;
     gap: var(--spacing);
