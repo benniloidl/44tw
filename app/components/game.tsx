@@ -4,8 +4,10 @@ import "./game.css";
 import { useEffect, useRef, useState } from "react";
 import { PitchCellValue } from "../types";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function Game({ gameId }: { gameId: string }) {
+    const router = useRouter();
     const [gameUrl, setGameUrl] = useState("");
 
     const wsRef = useRef<WebSocket | null>(null);
@@ -37,8 +39,7 @@ export default function Game({ gameId }: { gameId: string }) {
             }
 
             if (data.type === 'game_stop') {
-                // setConnectionStatus('waiting');
-                window.location.href = "/";
+                router.push('/');
             }
 
             if (data.type === 'move_made') {
@@ -57,13 +58,13 @@ export default function Game({ gameId }: { gameId: string }) {
 
         ws.onerror = (error) => {
             console.error('WebSocket error:', error, 'Redirecting to /');
-            window.location.href = "/";
+            router.push('/');
         };
 
         return () => {
             ws.close();
         };
-    }, []);
+    }, [router]);
 
     if (connectionStatus === 'waiting') return <main>
         <section>

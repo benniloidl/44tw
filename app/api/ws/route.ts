@@ -192,6 +192,10 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
     clientGameMap.delete(ws); // Delete ws to game id mapping
     if (!gameId) return;
 
+    // Delete all remaining game data
+    gameTurns.delete(gameId);
+    gamePitch.delete(gameId);
+
     const remainingClientsInGame = Array.from(clientGameMap.entries())
       .filter(([client, id]) => id === gameId && client.readyState === WebSocket.OPEN)
       .map(([client]) => client);
