@@ -1,7 +1,6 @@
 import { WebSocket } from 'ws';
 import { GameState, PitchCellValue } from '@/app/types';
 import { COL_COUNT, ROW_COUNT } from '@/app/constants/game';
-import { json } from 'stream/consumers';
 
 export class GameManager {
   private clients: Set<WebSocket>;
