@@ -138,6 +138,7 @@ export class GameManager {
   public getGameState(gameId: string): GameState | undefined {
     return this.gameStates.get(gameId);
   }
+
   public endGame(gameId: string, winner: WebSocket): void {
     // Notify all players in the game about the winner and end the game
     const players = this.getPlayersInGame(gameId);
