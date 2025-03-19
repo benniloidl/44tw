@@ -80,8 +80,7 @@ export class GameManager {
     return true;
   }
 
-
-  checkCombination(pitch: (WebSocket | null)[][], row: number, col: number, player: WebSocket): boolean {
+  private checkCombination(pitch: (WebSocket | null)[][], row: number, col: number, player: WebSocket): boolean {
     const directions = [
       [1, 0],
       [0, 1],
