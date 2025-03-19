@@ -59,6 +59,19 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
           if (gameState) {
             const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
             if (otherPlayer) {
+              if (gameState.over) {
+                ws.send(JSON.stringify({ 
+                  type: 'game_over',
+                  turn: false,
+                  pitch: gameManager.formatPitch(gameState.pitch, ws)
+                }));
+                otherPlayer.send(JSON.stringify({
+                  type: 'game_over',
+                  turn: true,
+                  pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
+                }));
+                return;
+              }
               ws.send(JSON.stringify({
                 type: 'move_made',
                 turn: false,

@@ -33,7 +33,8 @@ export class GameManager {
 
       this.gameStates.set(gameId, {
         pitch,
-        currentTurn: firstPlayer
+        currentTurn: firstPlayer,
+        over: false
       });
     }
   }
@@ -66,8 +67,7 @@ export class GameManager {
     if (rowIndex === -1) return false;
 
     if (this.checkCombination(pitch, rowIndex, columnIndex, ws)) {
-      this.endGame(gameId, ws);
-      return true;
+      gameState.over = true;
     }
 
     pitch[rowIndex][columnIndex] = ws;
@@ -136,13 +136,5 @@ export class GameManager {
 
   public getGameState(gameId: string): GameState | undefined {
     return this.gameStates.get(gameId);
-  }
-
-  public endGame(gameId: string, winner: WebSocket): void {
-    // Notify all players in the game about the winner
-    const players = this.getPlayersInGame(gameId);
-    players.forEach(player => {
-      player.send(JSON.stringify({ type: 'game_over', winner: winner === player }));
-    });
   }
 } 
