@@ -43,7 +43,7 @@ export default function RootLayout({
           </div>
           {children}
         </main>
-        <ToastContainer theme="dark" />
+        <ToastContainer theme="dark" pauseOnFocusLoss={false} />
       </body>
     </html>
   );

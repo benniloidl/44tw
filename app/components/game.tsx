@@ -51,20 +51,26 @@ export default function Game({ gameId }: { gameId: string }) {
             if (data.type === 'game_over') {
                 setPitch(data.pitch);
                 setTurn(data.turn);
-                toast((!data.turn ? "You" : "Your opponent") + " won the game.");
+
+                if (data.turn) {
+                    toast.info("Your opponent won the game.");
+                } else {
+                    toast.success("You won the game.");
+                }
 
                 // Close the WebSocket connection. This will automatically trigger the game data to be cleaned up
                 ws.close();
 
+                // Update UI and show the winner in the top section
                 setConnectionStatus('over');
             }
 
             if (data.type === 'message') {
-                toast(data.message);
+                toast.info(data.message);
             }
 
             if (data.type === 'error') {
-                toast("Error: " + data.message);
+                toast.error("Error: " + data.message);
             }
         };
 
@@ -80,10 +86,10 @@ export default function Game({ gameId }: { gameId: string }) {
 
     const copyGameUrl = () => {
         navigator.clipboard.writeText(gameUrl).then(() => {
-            toast("Game URL copied to clipboard!");
+            toast.success("Game URL copied to clipboard!");
         }).catch((error) => {
             console.error("Failed to copy game URL:", error);
-            toast("Failed to copy game URL.");
+            toast.error("Failed to copy game URL.");
         });
     }
 
