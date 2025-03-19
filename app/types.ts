@@ -3,7 +3,6 @@ import { WebSocket } from 'ws';
 export interface GameState {
   pitch: (WebSocket | null)[][];
   currentTurn: WebSocket | null;
-  winner?: WebSocket | null;
 }
 
 export interface GameMessage {
