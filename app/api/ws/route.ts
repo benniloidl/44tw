@@ -43,21 +43,10 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
     }
   }
 
-  let newGame = false;
-  while (!gameId || (newGame && games.has(gameId))) {
-    newGame = true;
-
-    // If no gameId provided, generate a new one
-    const words = [
-      'tree', 'home', 'bird', 'lake', 'star', 'moon', 'sun', 'rain', 
-      'wind', 'leaf', 'rock', 'fish', 'bear', 'deer', 'wolf', 'rose',
-      'pine', 'oak', 'fern', 'moss', 'sand', 'wave', 'hill', 'path',
-      'fire', 'snow', 'rice', 'corn', 'sage', 'mint', 'plan', 'book',
-      'door', 'wall', 'roof', 'gate', 'pond', 'cave', 'nest', 'seed'
-    ];
-  
-    const getRandomWord = () => words[Math.floor(Math.random() * words.length)];
-    gameId = `${getRandomWord()}-${getRandomWord()}-${getRandomWord()}`;
+  if (!gameId) {
+    ws.send(JSON.stringify({ type: 'error', message: 'Game ID is required to join a game.' }));
+    ws.close();
+    return;
   }
 
   clients.add(ws);
@@ -66,10 +55,6 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
   
   // Notify all other clients in the same game that a new player has connected
   clients.forEach((client) => {
-    if (newGame) {
-      client.send(JSON.stringify({ type: 'game_id', value: gameId }));
-    }
-
     // Check if there are exactly 2 players in this game
     const playersInGame = Array.from(clientGameMap.entries())
       .filter(([_, id]) => id === gameId)

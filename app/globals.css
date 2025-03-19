@@ -1,16 +1,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --container: #e1e1e1;
 
   --spacing: 1rem;
   --radius: 24px;
   --inner-radius: calc(var(--radius) - var(--spacing) / 2);
+
+  --container-width: calc(100% - 2 * var(--spacing));
+  --container-max-width: 800px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --container: #242424;
   }
 }
 
@@ -42,5 +47,33 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+main {
+  width: var(--container-width);
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding-bottom: calc(var(--spacing) * 4);
+
+  section {
+    background-color: var(--container);
+    border-radius: var(--radius);
+    margin-top: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 2);
+
+    hr {
+      margin-block: var(--spacing);
+      border-color: var(--foreground);
+      opacity: 0.4;
+    }
+
+    h1 {
+      font-size: 2em;
+    }
+
+    h2 {
+      font-size: 1.4em;
+    }
   }
 }
