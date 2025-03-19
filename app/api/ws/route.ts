@@ -82,7 +82,7 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
         //todo
       }
     } catch (error) {
-      console.log(error)
+      console.error(error);
       ws.send(JSON.stringify({ type: 'error', message: 'Invalid move data' }));
     }
   });
