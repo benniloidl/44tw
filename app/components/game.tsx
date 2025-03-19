@@ -1,6 +1,6 @@
 'use client';
 
-import "./game.css";
+import styles from "./game.module.css";
 import { useEffect, useRef, useState } from "react";
 import { PitchCellValue } from "../types";
 import { toast } from "react-toastify";
@@ -71,12 +71,12 @@ export default function Game({ gameId }: { gameId: string }) {
         <p>Waiting for opponent</p>
         <hr />
         <h2>How to invite a friend:</h2>
-        <ol>
+        <ol className={styles.connectInstructions}>
             <li>Share this game URL with your friend on the same network</li>
             <li>Your friend should open this URL in their browser</li>
             <li>Once connected, the game will start automatically</li>
         </ol>
-        <p className="game_url">{gameUrl}</p>
+        <p className={styles.url}>{gameUrl}</p>
     </section>
 
     const colCount = pitch[0].length;
@@ -94,31 +94,31 @@ export default function Game({ gameId }: { gameId: string }) {
 
     return <>
         <section>
-            <div className="game_stats">
-                <div className="game_pitch_cell_own" />
+            <div className={styles.stats}>
+                <div className={styles.cellOwn} />
                 <h1>You</h1>
                 <div style={{ flex: 1, textAlign: "center" }} />
                 <h1>Opponent</h1>
-                <div className="game_pitch_cell_other" />
+                <div className={styles.cellOther} />
             </div>
 
             <h2>{turn ? "Place a piece" : "Wait for opponent"}</h2>
         </section>
 
         <section>
-            <div className="game_pitch">
+            <div className={styles.pitch}>
                 {Array.from({ length: colCount }, (_, colIndex) => (
-                    <div className="game_pitch_col" data-col={colIndex} onClick={onColClick} key={colIndex}>
+                    <div className={styles.col} data-col={colIndex} onClick={onColClick} key={colIndex}>
                         {Array.from({ length: rowCount }, (_, cellIndex) => {
                             // const isLastNone = (props.pitch[cellIndex][colIndex] === PitchCellValue.NONE && cellIndex === rowCount - 1) || (props.pitch[cellIndex][colIndex] === PitchCellValue.NONE && props.pitch[cellIndex + 1][colIndex] !== PitchCellValue.NONE);
                             const isLastNone = pitch[cellIndex][colIndex] === PitchCellValue.NONE && (cellIndex === rowCount - 1 || pitch[cellIndex + 1][colIndex] !== PitchCellValue.NONE);
 
-                            return <div className="game_pitch_cell" key={cellIndex}>
+                            return <div className={styles.cell} key={cellIndex}>
                                 {pitch[cellIndex][colIndex] === PitchCellValue.OWN
-                                    ? <div className="game_pitch_cell_own" />
+                                    ? <div className={styles.cellOwn} />
                                     : pitch[cellIndex][colIndex] === PitchCellValue.OTHER
-                                        ? <div className="game_pitch_cell_other" />
-                                        : <div className={`game_pitch_cell_none${isLastNone ? ' game_pitch_cell_none_last' : ''}`} />
+                                        ? <div className={styles.cellOther} />
+                                        : <div className={isLastNone ? styles.cellNoneLast : styles.cellNone} />
                                 }
                             </div>
                         })}

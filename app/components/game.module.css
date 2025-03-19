@@ -1,14 +1,18 @@
-.game_url {
+.connectInstructions {
+    padding-left: calc(var(--spacing) * 2);
+}
+
+.url {
     margin-top: var(--spacing);
 }
 
-.game_stats {
+.stats {
     display: flex;
     gap: var(--spacing);
     align-items: center;
 }
 
-.game_pitch {
+.pitch {
     display: flex;
     gap: calc(var(--spacing) / 2);
 
@@ -16,13 +20,13 @@
     padding: 0 var(--spacing) var(--spacing) var(--spacing);
     border-radius: 0 0 var(--radius) var(--radius);
 
-    .game_pitch_col {
+    .col {
         --pitch-cell-background: var(--background);
 
         &:hover {
             --pitch-cell-background: grey;
 
-            .game_pitch_cell_none_last {
+            .cellNoneLast {
                 border: 4px dotted var(--primary);
             }
         }
@@ -30,7 +34,7 @@
         display: flex;
         flex-direction: column;
 
-        .game_pitch_cell {
+        .cell {
             background: var(--pitch-cell-background);
 
             padding: calc(var(--spacing) / 2);
@@ -42,9 +46,10 @@
     }
 }
 
-.game_pitch_cell_own,
-.game_pitch_cell_other,
-.game_pitch_cell_none {
+.cellOwn,
+.cellOther,
+.cellNone,
+.cellNoneLast {
     --stats-cell-size: 48px;
 
     min-height: var(--stats-cell-size);
@@ -58,10 +63,10 @@
     border-radius: 50%;
 }
 
-.game_pitch_cell_own {
+.cellOwn {
     background: var(--primary) !important;
 }
 
-.game_pitch_cell_other {
+.cellOther {
     background: var(--secondary) !important;
 }
