@@ -39,6 +39,12 @@ export class GameManager {
     }
   }
 
+  /**
+   * Transform a 2D WebSocket array into a 2D PitchCellValue array
+   * @param pitch The 2D array (pitch) where each player can place their pieces on
+   * @param ws The player the array is being formatted for
+   * @returns A formatted 2D array (pitch) using the PitchCellValue enum
+   */
   public formatPitch(pitch: (WebSocket | null)[][], ws: WebSocket): PitchCellValue[][] {
     return pitch.map(row =>
       row.map(cell => {
