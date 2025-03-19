@@ -68,7 +68,7 @@ export class GameManager {
 
     if (this.checkCombination(pitch, rowIndex, columnIndex, ws)) {
       this.endGame(gameId, ws);
-      return true
+      return true;
     }
 
     pitch[rowIndex][columnIndex] = ws;
