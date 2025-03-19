@@ -1,7 +1,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --container: #e1e1e1;
+  --container: #edededb9;
   --primary: rgb(196, 45, 22);
   --primary-hover: rgb(158, 36, 17);
   --secondary: rgb(219, 212, 17);
@@ -18,7 +18,7 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-    --container: #242424;
+    --container: #191919c2;
     --primary-hover: rgb(226, 62, 36);
   }
 }
@@ -70,7 +70,8 @@ main {
     background-color: var(--container);
     border-radius: var(--radius);
     margin-block: calc(var(--spacing) * 2);
-    padding: calc(var(--spacing) * 2);
+    padding: var(--spacing) calc(var(--spacing) * 2);
+    background: var(--container);
 
     hr {
       margin-block: var(--spacing);
@@ -87,13 +88,23 @@ main {
     }
 
     button {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--spacing) / 2);
+      font-weight: 600;
+
       background-color: var(--primary);
       border: none;
-      padding: var(--spacing);
+      padding: calc(var(--spacing) / 2) var(--spacing);
       font-size: 1em;
+      line-height: 2em;
       border-radius: calc(var(--radius) - var(--spacing) / 2);
       cursor: pointer;
       transition: background-color .2s ease;
+
+      svg {
+        max-height: 2em;
+      }
 
       &:hover {
         background-color: var(--primary-hover);

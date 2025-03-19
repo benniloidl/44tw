@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "./game.module.css";
+import { Link } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PitchCellValue } from "../types";
 import { toast } from "react-toastify";
@@ -66,6 +67,9 @@ export default function Game({ gameId }: { gameId: string }) {
         };
     }, [router]);
 
+    const copyGameUrl = () => {
+    }
+
     if (connectionStatus === 'waiting') return <section>
         <h1>Game Lobby</h1>
         <p>Waiting for opponent</p>
@@ -76,7 +80,10 @@ export default function Game({ gameId }: { gameId: string }) {
             <li>Your friend should open this URL in their browser</li>
             <li>Once connected, the game will start automatically</li>
         </ol>
-        <p className={styles.url}>{gameUrl}</p>
+        <button className={styles.url} onClick={copyGameUrl}>
+            <Link />
+            <span>{gameUrl}</span>
+        </button>
     </section>
 
     const colCount = pitch[0].length;
@@ -101,7 +108,7 @@ export default function Game({ gameId }: { gameId: string }) {
                 <h1>Opponent</h1>
                 <div className={styles.cellOther} />
             </div>
-
+            <hr/>
             <h2>{turn ? "Place a piece" : "Wait for opponent"}</h2>
         </section>
 

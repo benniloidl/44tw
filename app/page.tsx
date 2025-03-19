@@ -1,6 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
+import { CirclePlus } from 'lucide-react';
 
 export default function Home() {
   const createGameLobby = async () => {
@@ -22,7 +23,8 @@ export default function Home() {
       <p>You're not currently in a game. Click on the following button to create a game lobby.</p>
 
       <button onClick={createGameLobby} className={styles.button}>
-        Create Game Lobby
+        <CirclePlus />
+        <span>Create Game Lobby</span>
       </button>
     </section>
   );
