@@ -68,6 +68,12 @@ export default function Game({ gameId }: { gameId: string }) {
     }, [router]);
 
     const copyGameUrl = () => {
+        navigator.clipboard.writeText(gameUrl).then(() => {
+            toast("Game URL copied to clipboard!");
+        }).catch((error) => {
+            console.error("Failed to copy game URL:", error);
+            toast("Failed to copy game URL.");
+        });
     }
 
     if (connectionStatus === 'waiting') return <section>
