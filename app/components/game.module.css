@@ -29,6 +29,8 @@
     padding: 0 var(--spacing);
     border-radius: var(--radius);
 
+    user-select: none;
+
     .col {
         padding-block: var(--spacing);
 
@@ -73,6 +75,9 @@
     max-width: var(--stats-cell-size);
 
     border-radius: 50%;
+
+    display: grid;
+    place-items: center;
 }
 
 .cellOwn {

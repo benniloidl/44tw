@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "./game.module.css";
-import { Link } from "lucide-react";
+import { Crown, Link } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PitchCellValue } from "../types";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ export default function Game({ gameId }: { gameId: string }) {
     const [gameUrl, setGameUrl] = useState("");
 
     const wsRef = useRef<WebSocket | null>(null);
-    const [connectionStatus, setConnectionStatus] = useState<'waiting' | 'connected'>('waiting');
+    const [connectionStatus, setConnectionStatus] = useState<'waiting' | 'connected' | 'over'>('waiting');
     const [turn, setTurn] = useState(false);
     const [pitch, setPitch] = useState<PitchCellValue[][]>([]);
 
@@ -50,8 +50,13 @@ export default function Game({ gameId }: { gameId: string }) {
 
             if (data.type === 'game_over') {
                 setPitch(data.pitch);
+                setTurn(data.turn);
                 toast((!data.turn ? "You" : "Your opponent") + " won the game.");
+
+                // Close the WebSocket connection. This will automatically trigger the game data to be cleaned up
                 ws.close();
+
+                setConnectionStatus('over');
             }
 
             if (data.type === 'message') {
@@ -114,14 +119,19 @@ export default function Game({ gameId }: { gameId: string }) {
     return <>
         <section>
             <div className={styles.stats}>
-                <div className={styles.cellOwn} />
+                <div className={styles.cellOwn}>
+                    {connectionStatus === 'over' && !turn && <Crown />}
+                </div>
                 <h1>You</h1>
                 <div style={{ flex: 1, textAlign: "center" }} />
                 <h1>Opponent</h1>
-                <div className={styles.cellOther} />
+                <div className={styles.cellOther}>
+                    {connectionStatus === 'over' && turn && <Crown />}
+                </div>
             </div>
             <hr/>
-            <h2>{turn ? "Place a piece" : "Wait for opponent"}</h2>
+            {connectionStatus === 'connected' && <h2>{turn ? "Place a piece" : "Wait for opponent"}</h2>}
+            {connectionStatus === 'over' && <h2>{(turn ? "Your opponent is" : "You are") + " the winner"}</h2>}
         </section>
 
         <section className={styles.pitchSection}>
