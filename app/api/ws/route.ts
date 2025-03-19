@@ -53,45 +53,56 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
   ws.addEventListener('message', (event) => {
     try {
       const data = JSON.parse(event.data.toString()) as GameMessage;
-      if (data.type === 'move' && typeof data.col === 'number') {
-        if (gameManager.makeMove(ws, data.col)) {
-          const gameState = gameManager.getGameState(gameId);
-          if (gameState) {
-            const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
-            if (otherPlayer) {
-              if (gameState.over) {
-                ws.send(JSON.stringify({ 
-                  type: 'game_over',
-                  turn: false,
-                  pitch: gameManager.formatPitch(gameState.pitch, ws)
-                }));
-                otherPlayer.send(JSON.stringify({
-                  type: 'game_over',
-                  turn: true,
-                  pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
-                }));
-                return;
-              }
-              ws.send(JSON.stringify({
-                type: 'move_made',
-                turn: false,
-                pitch: gameManager.formatPitch(gameState.pitch, ws)
-              }));
-              otherPlayer.send(JSON.stringify({
-                type: 'move_made',
-                turn: true,
-                pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
-              }));
-              otherPlayer.send(JSON.stringify({
-                type: 'message',
-                message: "It's your turn."
-              }));
-            }
-          }
-        } else {
-          ws.send(JSON.stringify({ type: 'error', message: 'Invalid move' }));
-        }
+
+      if (data.type !== 'move' || typeof data.col !== 'number') {
+        return;
       }
+
+      const moveSuccessful = gameManager.makeMove(ws, data.col);
+      if (!moveSuccessful) {
+        ws.send(JSON.stringify({ type: 'error', message: 'Invalid move' }));
+        return;
+      }
+
+      const gameState = gameManager.getGameState(gameId);
+      if (!gameState) {
+        return;
+      }
+
+      const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
+      if (!otherPlayer) {
+        return;
+      }
+
+      if (gameState.over) {
+        ws.send(JSON.stringify({
+          type: 'game_over',
+          turn: false,
+          pitch: gameManager.formatPitch(gameState.pitch, ws)
+        }));
+        otherPlayer.send(JSON.stringify({
+          type: 'game_over',
+          turn: true,
+          pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
+        }));
+        return;
+      }
+
+      // Handle regular move
+      ws.send(JSON.stringify({
+        type: 'move_made',
+        turn: false,
+        pitch: gameManager.formatPitch(gameState.pitch, ws)
+      }));
+      otherPlayer.send(JSON.stringify({
+        type: 'move_made',
+        turn: true,
+        pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
+      }));
+      otherPlayer.send(JSON.stringify({
+        type: 'message',
+        message: "It's your turn."
+      }));
     } catch (error) {
       console.error(error);
       ws.send(JSON.stringify({ type: 'error', message: 'Invalid move data' }));
