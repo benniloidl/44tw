@@ -66,20 +66,18 @@ export default function Game({ gameId }: { gameId: string }) {
         };
     }, [router]);
 
-    if (connectionStatus === 'waiting') return <main>
-        <section>
-            <h1>Game Lobby</h1>
-            <p>Waiting for opponent</p>
-            <hr />
-            <h2>How to invite a friend:</h2>
-            <ol>
-                <li>Share this game URL with your friend on the same network</li>
-                <li>Your friend should open this URL in their browser</li>
-                <li>Once connected, the game will start automatically</li>
-            </ol>
-            <p className="game_url">{gameUrl}</p>
-        </section>
-    </main>
+    if (connectionStatus === 'waiting') return <section>
+        <h1>Game Lobby</h1>
+        <p>Waiting for opponent</p>
+        <hr />
+        <h2>How to invite a friend:</h2>
+        <ol>
+            <li>Share this game URL with your friend on the same network</li>
+            <li>Your friend should open this URL in their browser</li>
+            <li>Once connected, the game will start automatically</li>
+        </ol>
+        <p className="game_url">{gameUrl}</p>
+    </section>
 
     const colCount = pitch[0].length;
     const rowCount = pitch.length;
@@ -94,7 +92,7 @@ export default function Game({ gameId }: { gameId: string }) {
         }));
     };
 
-    return <main>
+    return <>
         <section>
             <div className="game_stats">
                 <div className="game_pitch_cell_own" />
@@ -128,5 +126,5 @@ export default function Game({ gameId }: { gameId: string }) {
                 ))}
             </div>
         </section>
-    </main>
+    </>
 }

@@ -2,6 +2,9 @@
   --background: #ffffff;
   --foreground: #171717;
   --container: #e1e1e1;
+  --primary: rgb(196, 45, 22);
+  --primary-hover: rgb(158, 36, 17);
+  --secondary: rgb(219, 212, 17);
 
   --spacing: 1rem;
   --radius: 24px;
@@ -16,6 +19,7 @@
     --background: #0a0a0a;
     --foreground: #ededed;
     --container: #242424;
+    --primary-hover: rgb(226, 62, 36);
   }
 }
 
@@ -26,9 +30,15 @@ body {
 }
 
 body {
+  --dot-size: 1px;
+  --dot-space: 22px;
+
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(90deg, var(--background) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    linear-gradient(var(--background) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    linear-gradient(to right, var(--primary), var(--secondary));
+
+  font-family: var(--font-geist-sans), Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -75,5 +85,30 @@ main {
     h2 {
       font-size: 1.4em;
     }
+
+    button {
+      background-color: var(--primary);
+      border: none;
+      padding: var(--spacing);
+      font-size: 1em;
+      border-radius: calc(var(--radius) - var(--spacing) / 2);
+      cursor: pointer;
+      transition: background-color .2s ease;
+
+      &:hover {
+        background-color: var(--primary-hover);
+      }
+    }
+  }
+}
+
+.logo-wrapper {
+  padding-top: var(--spacing);
+  padding-inline: calc(var(--spacing) * 2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    filter: invert();
   }
 }

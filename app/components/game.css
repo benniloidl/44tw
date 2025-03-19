@@ -23,7 +23,7 @@
             --pitch-cell-background: grey;
 
             .game_pitch_cell_none_last {
-                border: 4px dotted rgb(196, 45, 22);
+                border: 4px dotted var(--primary);
             }
         }
 
@@ -59,9 +59,9 @@
 }
 
 .game_pitch_cell_own {
-    background: rgb(196, 45, 22) !important;
+    background: var(--primary) !important;
 }
 
 .game_pitch_cell_other {
-    background: rgb(219, 212, 17) !important;
+    background: var(--secondary) !important;
 }

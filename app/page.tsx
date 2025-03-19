@@ -1,7 +1,6 @@
 'use client';
 
 import styles from "./page.module.css";
-import Image from "next/image";
 
 export default function Home() {
   const createGameLobby = async () => {
@@ -18,21 +17,13 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/44tw.svg"
-          alt="44tw logo"
-          width={200}
-          height={48}
-          priority
-        />
+    <section>
+      <h1>Welcome to 44tw</h1>
+      <p>You're not currently in a game. Click on the following button to create a game lobby.</p>
 
-        <button onClick={createGameLobby} className={styles.button}>
-          Create Game Lobby
-        </button>
-      </main>
-    </div>
+      <button onClick={createGameLobby} className={styles.button}>
+        Create Game Lobby
+      </button>
+    </section>
   );
 }

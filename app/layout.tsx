@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
 import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
@@ -25,8 +26,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="theme-color" content="#000" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <main>
+          <div className="logo-wrapper">
+            <Image
+              className="logo"
+              src="/44tw.svg"
+              alt="44tw logo"
+              width={200}
+              height={48}
+              priority
+            />
+          </div>
+          {children}
+        </main>
         <ToastContainer theme="dark" />
       </body>
     </html>
