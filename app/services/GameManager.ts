@@ -140,14 +140,10 @@ export class GameManager {
   }
 
   public endGame(gameId: string, winner: WebSocket): void {
-    // Notify all players in the game about the winner and end the game
+    // Notify all players in the game about the winner
     const players = this.getPlayersInGame(gameId);
     players.forEach(player => {
       player.send(JSON.stringify({ type: 'GAME_OVER', winner: winner === player ? 'YOU' : 'OPPONENT' }));
     });
-
-    // Clean up game state
-    this.gameStates.delete(gameId);
-    this.games.delete(gameId);
   }
 } 
