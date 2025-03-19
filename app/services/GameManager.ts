@@ -15,6 +15,12 @@ export class GameManager {
     this.gameStates = new Map();
   }
 
+  /**
+   * Add a client (WebSocket) to a game
+   * @param ws The client that should be added to the game
+   * @param gameId The gameId of the game
+   * @returns true if successful, false if not
+   */
   public addClient(ws: WebSocket, gameId: string): boolean {
     const playersInGame = this.getPlayersInGame(gameId).length;
     if (playersInGame >= 2) return false;
