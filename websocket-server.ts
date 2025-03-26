@@ -9,7 +9,7 @@ const gameManager = new GameManager();
 function startWebSocketServer() {
     let wss: WebSocketServer;
 
-    if (process.env.NODE_ENV === 'production') {
+    if (false /* process.env.NODE_ENV === 'production' */) {
         const server = https.createServer({
             cert: fs.readFileSync(process.env.SSL_CERT_PATH || ''),
             key: fs.readFileSync(process.env.SSL_KEY_PATH || '')
