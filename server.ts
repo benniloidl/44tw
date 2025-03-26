@@ -1,9 +1,36 @@
-import { WebSocketServer, WebSocket } from 'ws';
+/*import { WebSocketServer, WebSocket } from 'ws';
 import { NextResponse } from 'next/server';
 import { GameManager } from '@/app/services/GameManager';
 import { GameMessage } from '@/app/types';
 
-let wss: WebSocketServer = new WebSocketServer({ port: 3000 });;
+
+export async function GET(req: Request) {
+  return new NextResponse('WebSocket server is running');
+}*/
+import { createServer } from 'http'
+import { parse } from 'url'
+import next from 'next'
+import { WebSocketServer } from 'ws'
+import { GameManager } from './app/services/GameManager'
+ 
+const port = parseInt(process.env.PORT || '3000', 10)
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+ 
+app.prepare().then(() => {
+  const server = createServer((req, res) => {
+    const parsedUrl = parse(req.url!, true)
+    handle(req, res, parsedUrl)
+  }).listen(port);
+ 
+  console.log(
+    `> Server listening at http://localhost:${port} as ${
+      dev ? 'development' : process.env.NODE_ENV
+    }`
+  );
+
+  let wss: WebSocketServer = new WebSocketServer({ server });;
 const gameManager = new GameManager();
 
 wss.on('connection', (ws: WebSocket, req: Request) => {
@@ -119,6 +146,4 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
   });
 });
 
-export async function GET(req: Request) {
-  return new NextResponse('WebSocket server is running');
-}
+})
