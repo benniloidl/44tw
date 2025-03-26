@@ -1,3 +1,4 @@
+/*
 import { WebSocketServer, WebSocket } from 'ws';
 import { NextResponse } from 'next/server';
 import { GameManager } from '@/app/services/GameManager';
@@ -137,4 +138,5 @@ wss.on('connection', (ws: WebSocket, req: Request) => {
 
 export async function GET(req: Request) {
   return new NextResponse('WebSocket server is running');
-} 
+}
+*/
