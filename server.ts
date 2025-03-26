@@ -1,150 +1,139 @@
-/*import { WebSocketServer, WebSocket } from 'ws';
-import { NextResponse } from 'next/server';
-import { GameManager } from '@/app/services/GameManager';
-import { GameMessage } from '@/app/types';
+import { createServer } from "http";
+import { parse } from "url";
+import next from "next";
+import { WebSocket, WebSocketServer } from "ws";
+import { GameManager } from "./app/services/GameManager";
+import { GameMessage } from "./app/types";
 
+const port = parseInt(process.env.PORT || "3000", 10);
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
-export async function GET(req: Request) {
-  return new NextResponse('WebSocket server is running');
-}*/
-import { createServer } from 'http'
-import { parse } from 'url'
-import next from 'next'
-import { WebSocketServer, WebSocket } from 'ws'
-import { GameManager } from './app/services/GameManager'
-import { GameMessage } from './app/types'
- 
-const port = parseInt(process.env.PORT || '3000', 10)
-const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
- 
 app.prepare().then(() => {
-  const server = createServer((req, res) => {
-    const parsedUrl = parse(req.url!, true)
-    handle(req, res, parsedUrl)
-  }).listen(port);
- 
-  console.log(
-    `> Server listening at http://localhost:${port} as ${
-      dev ? 'development' : process.env.NODE_ENV
-    }`
-  );
+    const server = createServer((req, res) => {
+        const parsedUrl = parse(req.url!, true);
+        handle(req, res, parsedUrl);
+    }).listen(port);
 
-  let wss: WebSocketServer = new WebSocketServer({ server });;
-const gameManager = new GameManager();
+    console.log(
+        `> Server listening at http://localhost:${port} as ${dev ? "development" : process.env.NODE_ENV
+        }`,
+    );
 
-wss.on('connection', (ws: WebSocket, req: Request) => {
-  const url = new URL(req.url || '', 'ws://localhost');
-  const gameId = url.searchParams.get('gameId');
+    let wss: WebSocketServer = new WebSocketServer({ port: 3001 });;
+    const gameManager = new GameManager();
 
-  if (!gameId) {
-    ws.send(JSON.stringify({ type: 'error', message: 'Game ID is required to join a game.' }));
-    ws.close();
-    return;
-  }
+    wss.on('connection', (ws: WebSocket, req: Request) => {
+        const url = new URL(req.url || '', 'ws://localhost');
+        const gameId = url.searchParams.get('gameId');
 
-  if (!gameManager.addClient(ws, gameId)) {
-    ws.send(JSON.stringify({ type: 'error', message: 'The game is full.' }));
-    ws.close();
-    return;
-  }
-
-  const playersInGame = gameManager.getPlayersInGame(gameId);
-  if (playersInGame.length === 2) {
-    gameManager.initializeGame(gameId);
-    const gameState = gameManager.getGameState(gameId);
-
-    if (gameState) {
-      playersInGame.forEach(player => {
-        player.send(JSON.stringify({
-          type: 'game_start',
-          turn: player === gameState.currentTurn,
-          pitch: gameManager.formatPitch(gameState.pitch, player)
-        }));
-
-        player.send(JSON.stringify({
-          type: 'message',
-          message: "The game has started."
-        }));
-
-        if (player === gameState.currentTurn) {
-          player.send(JSON.stringify({
-            type: 'message',
-            message: "It's your turn."
-          }));
+        if (!gameId) {
+            ws.send(JSON.stringify({ type: 'error', message: 'Game ID is required to join a game.' }));
+            ws.close();
+            return;
         }
-      });
-    }
-  }
 
-  ws.addEventListener('message', (event) => {
-    try {
-      const data = JSON.parse(event.data.toString()) as GameMessage;
+        if (!gameManager.addClient(ws, gameId)) {
+            ws.send(JSON.stringify({ type: 'error', message: 'The game is full.' }));
+            ws.close();
+            return;
+        }
 
-      if (data.type !== 'move' || typeof data.col !== 'number') {
-        return;
-      }
+        const playersInGame = gameManager.getPlayersInGame(gameId);
+        if (playersInGame.length === 2) {
+            gameManager.initializeGame(gameId);
+            const gameState = gameManager.getGameState(gameId);
 
-      const moveSuccessful = gameManager.makeMove(ws, data.col);
-      if (!moveSuccessful) {
-        ws.send(JSON.stringify({ type: 'error', message: 'Invalid move' }));
-        return;
-      }
+            if (gameState) {
+                playersInGame.forEach(player => {
+                    player.send(JSON.stringify({
+                        type: 'game_start',
+                        turn: player === gameState.currentTurn,
+                        pitch: gameManager.formatPitch(gameState.pitch, player)
+                    }));
 
-      const gameState = gameManager.getGameState(gameId);
-      if (!gameState) {
-        return;
-      }
+                    player.send(JSON.stringify({
+                        type: 'message',
+                        message: "The game has started."
+                    }));
 
-      const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
-      if (!otherPlayer) {
-        return;
-      }
+                    if (player === gameState.currentTurn) {
+                        player.send(JSON.stringify({
+                            type: 'message',
+                            message: "It's your turn."
+                        }));
+                    }
+                });
+            }
+        }
 
-      if (gameState.over) {
-        ws.send(JSON.stringify({
-          type: 'game_over',
-          turn: false,
-          pitch: gameManager.formatPitch(gameState.pitch, ws)
-        }));
-        otherPlayer.send(JSON.stringify({
-          type: 'game_over',
-          turn: true,
-          pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
-        }));
-        return;
-      }
+        ws.addEventListener('message', (event) => {
+            try {
+                const data = JSON.parse(event.data.toString()) as GameMessage;
 
-      // Handle regular move
-      ws.send(JSON.stringify({
-        type: 'move_made',
-        turn: false,
-        pitch: gameManager.formatPitch(gameState.pitch, ws)
-      }));
-      otherPlayer.send(JSON.stringify({
-        type: 'move_made',
-        turn: true,
-        pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
-      }));
-      otherPlayer.send(JSON.stringify({
-        type: 'message',
-        message: "It's your turn."
-      }));
-    } catch (error) {
-      console.error(error);
-      ws.send(JSON.stringify({ type: 'error', message: 'Invalid move data' }));
-    }
-  });
+                if (data.type !== 'move' || typeof data.col !== 'number') {
+                    return;
+                }
 
-  ws.addEventListener('close', () => {
-    gameManager.removeClient(ws);
-    const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
-    if (otherPlayer) {
-      otherPlayer.send(JSON.stringify({ type: 'message', message: "Your opponent has disconnected." }));
-      otherPlayer.send(JSON.stringify({ type: 'game_stop' }));
-    }
-  });
+                const moveSuccessful = gameManager.makeMove(ws, data.col);
+                if (!moveSuccessful) {
+                    ws.send(JSON.stringify({ type: 'error', message: 'Invalid move' }));
+                    return;
+                }
+
+                const gameState = gameManager.getGameState(gameId);
+                if (!gameState) {
+                    return;
+                }
+
+                const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
+                if (!otherPlayer) {
+                    return;
+                }
+
+                if (gameState.over) {
+                    ws.send(JSON.stringify({
+                        type: 'game_over',
+                        turn: false,
+                        pitch: gameManager.formatPitch(gameState.pitch, ws)
+                    }));
+                    otherPlayer.send(JSON.stringify({
+                        type: 'game_over',
+                        turn: true,
+                        pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
+                    }));
+                    return;
+                }
+
+                // Handle regular move
+                ws.send(JSON.stringify({
+                    type: 'move_made',
+                    turn: false,
+                    pitch: gameManager.formatPitch(gameState.pitch, ws)
+                }));
+                otherPlayer.send(JSON.stringify({
+                    type: 'move_made',
+                    turn: true,
+                    pitch: gameManager.formatPitch(gameState.pitch, otherPlayer)
+                }));
+                otherPlayer.send(JSON.stringify({
+                    type: 'message',
+                    message: "It's your turn."
+                }));
+            } catch (error) {
+                console.error(error);
+                ws.send(JSON.stringify({ type: 'error', message: 'Invalid move data' }));
+            }
+        });
+
+        ws.addEventListener('close', () => {
+            gameManager.removeClient(ws);
+            const otherPlayer = gameManager.getOtherPlayer(gameId, ws);
+            if (otherPlayer) {
+                otherPlayer.send(JSON.stringify({ type: 'message', message: "Your opponent has disconnected." }));
+                otherPlayer.send(JSON.stringify({ type: 'game_stop' }));
+            }
+        });
+    });
 });
-
-})
