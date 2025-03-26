@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "concurrently \"next dev --turbopack\" \"ts-node websocket-server.ts\"",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently \"next start\" \"ts-node websocket-server.ts\"",
     "lint": "next lint"
   },
   "dependencies": {
+    "concurrently": "^9.1.2",
     "lucide-react": "^0.483.0",
     "next": "15.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^11.0.5",
+    "ts-node": "^10.9.2",
     "ws": "^8.18.1"
   },
   "devDependencies": {
