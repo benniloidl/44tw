@@ -10,8 +10,9 @@ export async function GET(req: Request) {
 import { createServer } from 'http'
 import { parse } from 'url'
 import next from 'next'
-import { WebSocketServer } from 'ws'
+import { WebSocketServer, WebSocket } from 'ws'
 import { GameManager } from './app/services/GameManager'
+import { GameMessage } from './app/types'
  
 const port = parseInt(process.env.PORT || '3000', 10)
 const dev = process.env.NODE_ENV !== 'production'
