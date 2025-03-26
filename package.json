@@ -24,7 +24,6 @@
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.0",
     "nodemon": "^3.1.9",
-    "ts-node": "^10.9.1",
     "typescript": "^5.8.2"
   }
 }
