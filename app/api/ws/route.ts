@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { GameManager } from '@/app/services/GameManager';
 import { GameMessage } from '@/app/types';
 
-let wss: WebSocketServer = new WebSocketServer();
+let wss: WebSocketServer = new WebSocketServer({ port: 80 });;
 const gameManager = new GameManager();
 
 wss.on('connection', (ws: WebSocket, req: Request) => {
