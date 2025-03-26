@@ -7,8 +7,6 @@ import * as fs from 'fs';
 const gameManager = new GameManager();
 
 function startWebSocketServer() {
-    console.log("ENV", process.env.NODE_ENV);
-
     let wss: WebSocketServer;
 
     if (process.env.NODE_ENV === 'production') {
