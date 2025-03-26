@@ -17,8 +17,6 @@ export default function Game({ gameId }: { gameId: string }) {
     const [pitch, setPitch] = useState<PitchCellValue[][]>([]);
 
     useEffect(() => {
-        console.log("ENV", process.env.NODE_ENV);
-        
         // Set game url for sharing
         setGameUrl(`${window.location.protocol}//${window.location.hostname}:${window.location.port || '3000'}/${encodeURIComponent(gameId)}`);
 
