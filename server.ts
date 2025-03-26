@@ -21,7 +21,7 @@ app.prepare().then(() => {
         }`,
     );
 
-    let wss: WebSocketServer = new WebSocketServer({ port: 3001 });;
+    let wss: WebSocketServer = new WebSocketServer({ port: 3001 });
     const gameManager = new GameManager();
 
     wss.on('connection', (ws: WebSocket, req: Request) => {
