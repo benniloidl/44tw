@@ -2,25 +2,9 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { NextResponse } from 'next/server';
 import { GameManager } from '@/app/services/GameManager';
 import { GameMessage } from '@/app/types';
-import * as https from 'https';
-import * as fs from 'fs';
 
-let wss: WebSocketServer;
+let wss: WebSocketServer = new WebSocketServer({ port: 3001 });;
 const gameManager = new GameManager();
-
-console.log("TEST", process.env.NODE_ENV);
-
-if (process.env.NODE_ENV === 'production') {
-  const server = https.createServer({
-    cert: fs.readFileSync(process.env.SSL_CERT_PATH || ''),
-    key: fs.readFileSync(process.env.SSL_KEY_PATH || '')
-  });
-  
-  wss = new WebSocketServer({ server });
-  server.listen(3001);
-} else {
-  wss = new WebSocketServer({ port: 3001 });
-}
 
 wss.on('connection', (ws: WebSocket, req: Request) => {
   const url = new URL(req.url || '', 'ws://localhost');
