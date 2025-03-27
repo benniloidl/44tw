@@ -29,6 +29,10 @@ app.prepare().then(() => {
 
     wss.on('connection', (ws: WebSocket, req: Request) => {
         console.log("New websocket connection");
+        ws.send(JSON.stringify({
+            type: 'message',
+            message: "Connection confirmation."
+        }));
 
         const url = new URL(req.url || '', 'ws://localhost');
         const gameId = url.searchParams.get('gameId');
