@@ -21,7 +21,7 @@ export default function Game({ gameId }: { gameId: string }) {
         setGameUrl(`${window.location.protocol}//${window.location.hostname}:${window.location.port || '3000'}/${encodeURIComponent(gameId)}`);
 
         // Set up WebSocket connection
-        const protocol = window.location.protocol == 'https' ? 'wss' : 'ws';
+        const protocol = window.location.protocol == 'https:' ? 'wss' : 'ws';
         let ws_conn_url = `${protocol}://${window.location.hostname}:${window.location.port}/benedictweis/?gameId=${encodeURIComponent(gameId)}`;
         const ws = new WebSocket(ws_conn_url);
         wsRef.current = ws;
