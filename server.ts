@@ -10,8 +10,6 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-const gameManager = new GameManager();
-
 app.prepare().then(() => {
     const server = createServer((req, res) => {
         const parsedUrl = parse(req.url!, true);
@@ -24,6 +22,7 @@ app.prepare().then(() => {
     );
 
     let wss: WebSocketServer = new WebSocketServer({ server });
+    const gameManager = GameManager.getInstance();
 
     console.log("Websocket server running");
 

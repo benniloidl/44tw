@@ -3,16 +3,26 @@ import { GameState, PitchCellValue } from '../../app/types';
 import { COL_COUNT, ROW_COUNT } from '../../app/constants/game';
 
 export class GameManager {
+  private static instance: GameManager;
+
   private clients: Set<WebSocket>;
   private games: Set<string>;
   private clientGameMap: Map<WebSocket, string>;
   private gameStates: Map<string, GameState>;
 
-  constructor() {
+  private constructor() {
     this.clients = new Set();
     this.games = new Set();
     this.clientGameMap = new Map();
     this.gameStates = new Map();
+  }
+
+  static getInstance() {
+    if (GameManager.instance) {
+      return this.instance;
+    }
+    this.instance = new GameManager();
+    return this.instance;
   }
 
   /**
