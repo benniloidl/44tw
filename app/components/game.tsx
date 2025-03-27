@@ -18,7 +18,7 @@ export default function Game({ gameId }: { gameId: string }) {
 
     useEffect(() => {
         // Set game url for sharing
-        setGameUrl(`${window.location.protocol}//${window.location.hostname}:${window.location.port || '3000'}/${encodeURIComponent(gameId)}`);
+        setGameUrl(`${window.location.protocol}//${window.location.hostname}:${window.location.port}/${encodeURIComponent(gameId)}`);
 
         // Set up WebSocket connection
         const protocol = window.location.protocol == 'https:' ? 'wss' : 'ws';
