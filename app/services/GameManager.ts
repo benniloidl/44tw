@@ -5,13 +5,13 @@ import { COL_COUNT, ROW_COUNT } from '../../app/constants/game';
 export class GameManager {
   private static instance: GameManager;
 
-  private clients: Set<WebSocket>;
+  private clients: WebSocket[];
   private games: Set<string>;
   private clientGameMap: Map<WebSocket, string>;
   private gameStates: Map<string, GameState>;
 
   private constructor() {
-    this.clients = new Set();
+    this.clients = [];
     this.games = new Set();
     this.clientGameMap = new Map();
     this.gameStates = new Map();
@@ -35,7 +35,7 @@ export class GameManager {
     const playersInGame = this.getPlayersInGame(gameId).length;
     if (playersInGame >= 2) return false;
 
-    this.clients.add(ws);
+    this.clients.push(ws);
     this.games.add(gameId);
     this.clientGameMap.set(ws, gameId);
 
@@ -171,7 +171,7 @@ export class GameManager {
    */
   public removeClient(ws: WebSocket): void {
     const gameId = this.clientGameMap.get(ws);
-    this.clients.delete(ws);
+    this.clients = this.clients.filter(c => c != ws);
     this.clientGameMap.delete(ws);
 
     if (gameId) {
