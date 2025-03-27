@@ -28,6 +28,8 @@ export class GameManager {
     this.clients.add(ws);
     this.games.add(gameId);
     this.clientGameMap.set(ws, gameId);
+
+    console.log("Client added to: ", gameId, " Players in game: ", playersInGame);
     return true;
   }
 

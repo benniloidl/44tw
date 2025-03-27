@@ -44,8 +44,12 @@ app.prepare().then(() => {
             return;
         }
 
+        console.log("A")
+
         const playersInGame = gameManager.getPlayersInGame(gameId);
         if (playersInGame.length === 2) {
+            console.log("B");
+
             gameManager.initializeGame(gameId);
             const gameState = gameManager.getGameState(gameId);
 
