@@ -24,7 +24,11 @@ app.prepare().then(() => {
     let wss: WebSocketServer = new WebSocketServer({ server });
     const gameManager = new GameManager();
 
+    console.log("Websocket server running");
+
     wss.on('connection', (ws: WebSocket, req: Request) => {
+        console.log("New websocket connection");
+
         const url = new URL(req.url || '', 'ws://localhost');
         const gameId = url.searchParams.get('gameId');
 
