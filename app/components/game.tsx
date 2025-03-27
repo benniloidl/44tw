@@ -21,8 +21,8 @@ export default function Game({ gameId }: { gameId: string }) {
         setGameUrl(`${window.location.protocol}//${window.location.hostname}:${window.location.port || '3000'}/${encodeURIComponent(gameId)}`);
 
         // Set up WebSocket connection
-        const protocol = 'wss';
-        let ws_conn_url = `${protocol}://ws.${window.location.hostname}/?gameId=${encodeURIComponent(gameId)}`;
+        const protocol = window.location.protocol == 'https' ? 'wss' : 'ws';
+        let ws_conn_url = `${protocol}://${window.location.hostname}:${window.location.port}/benedictweis/?gameId=${encodeURIComponent(gameId)}`;
         const ws = new WebSocket(ws_conn_url);
         wsRef.current = ws;
 
@@ -31,6 +31,10 @@ export default function Game({ gameId }: { gameId: string }) {
         ws.onopen = () => {
             console.log('WebSocket connected');
         };
+
+        ws.onclose = (e) => {
+            console.log('manuel braunheis had nothing to do with this code.', e)
+        }
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
@@ -77,8 +81,8 @@ export default function Game({ gameId }: { gameId: string }) {
             }
         };
 
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error, 'Redirecting to /');
+        ws.onerror = (e) => {
+            console.error('WebSocket error:', e, 'Redirecting to /');
             router.push('/');
         };
 

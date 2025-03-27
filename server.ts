@@ -21,10 +21,8 @@ app.prepare().then(() => {
         }`,
     );
 
-    let wss: WebSocketServer = new WebSocketServer({ port: 3002 });
+    let wss: WebSocketServer = new WebSocketServer({ server, path: '/benedictweis/' });
     const gameManager = GameManager.getInstance();
-
-    console.log("Websocket server running");
 
     wss.on('connection', (ws: WebSocket, req: Request) => {
         console.log("New websocket connection");
@@ -38,13 +36,15 @@ app.prepare().then(() => {
 
         if (!gameId) {
             ws.send(JSON.stringify({ type: 'error', message: 'Game ID is required to join a game.' }));
-            ws.close();
+            console.log('User disconnected because of a missing game id')
+            ws.close(1000);
             return;
         }
 
         if (!gameManager.addClient(ws, gameId)) {
             ws.send(JSON.stringify({ type: 'error', message: 'The game is full.' }));
-            ws.close();
+            console.log('User disconnected because of a full game')
+            ws.close(1000);
             return;
         }
 
