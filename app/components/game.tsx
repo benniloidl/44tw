@@ -32,8 +32,8 @@ export default function Game({ gameId }: { gameId: string }) {
             console.log('WebSocket connected');
         };
 
-        ws.onclose = (e) => {
-            console.log('manuel braunheis had nothing to do with this code.', e)
+        ws.onclose = () => {
+            console.log('WebSocket disconnected');
         }
 
         ws.onmessage = (event) => {
