@@ -21,7 +21,7 @@ app.prepare().then(() => {
         }`,
     );
 
-    let wss: WebSocketServer = new WebSocketServer({ server, path: '/benedictweis/' });
+    let wss: WebSocketServer = new WebSocketServer({ server, path: '/ws/' });
     const gameManager = GameManager.getInstance();
 
     wss.on('connection', (ws: WebSocket, req: Request) => {
