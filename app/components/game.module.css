@@ -1,4 +1,5 @@
 .connectInstructions {
+    margin-block: calc(var(--spacing) / 2);
     padding-left: calc(var(--spacing) * 2);
 }
 
@@ -65,6 +66,10 @@
 .cellNone,
 .cellNoneLast {
     --stats-cell-size: 48px;
+
+    @media (max-width: 600px) {
+        --stats-cell-size: 24px;
+    }
 
     min-height: var(--stats-cell-size);
     height: var(--stats-cell-size);
