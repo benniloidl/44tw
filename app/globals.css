@@ -12,6 +12,8 @@
 
   --container-width: calc(100% - 2 * var(--spacing));
   --container-max-width: 800px;
+
+  --pitch-background: black;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,6 +22,7 @@
     --foreground: #ededed;
     --container: #191919c2;
     --primary-hover: rgb(226, 62, 36);
+    --pitch-background: white;
   }
 }
 
