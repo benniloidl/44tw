@@ -1,3 +1,7 @@
+# 44tw
+
+> "4-for-the-win": Ein WebSocket-basiertes 4-gewinnt-Spiel
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
