@@ -1,8 +1,6 @@
 # 44tw
 
-> "4-for-the-win": Ein WebSocket-basiertes 4-gewinnt-Spiel
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+> "4-for-the-win": A WebSocket-based 1vs1 game where a player must place 4 pieces in a row or diagonal to win
 
 ## Getting Started
 
